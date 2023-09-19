@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -15,7 +16,7 @@ class Author(models.Model):
 
     author_name = models.TextField(verbose_name="Имя автора")
     author_surname = models.TextField(verbose_name="Фамилия автора")
-    author_middle_name = models.TextField(verbose_name="Отчество автора")
+    author_middle_name = models.TextField(verbose_name="Отчество автора", blank=True, null=True)
 
 
     def __str__(self):
@@ -27,13 +28,14 @@ class Book(models.Model):
 
 
     class Meta:
-       db_table = "books"
-       verbose_name = "Описание книги"
-       verbose_name_plural = "Книги"
+        db_table = "books"
+        verbose_name = "Описание книги"
+        verbose_name_plural = "Книги"
 
 
     title = models.TextField(verbose_name="Название произведения")
-    author = models.ForeignKey(Author, on_delete=models.RESTRICT, verbose_name="Автор")
+    author = models.ForeignKey(Author, on_delete=models.RESTRICT, verbose_name="Автор",
+                               blank=True, null=True)
     number_of_pages = models.IntegerField(verbose_name="Количество страниц")
     barcode = models.TextField(verbose_name="Штрих-код")
     publication_date = models.DateField(verbose_name="Дата издания")
@@ -74,17 +76,17 @@ class BooksInUse(models.Model):
         verbose_name = "Книга в использовании"
         verbose_name_plural = "Книги в использовании"
 
-
     statuses = (("waiting for issuance", "ожидание выдачи"),
                 ("issued", "выдана"),
                 ("received", "получена"))
 
 
     book = models.ForeignKey(Book, on_delete=models.RESTRICT, verbose_name="Книга")
-    book_owner = models.ForeignKey(UserBook, on_delete=models.RESTRICT, verbose_name="Владелец книги")
+    book_owner = models.ForeignKey(UserBook, on_delete=models.RESTRICT,
+                                   verbose_name="Владелец книги")
     status = models.TextField(verbose_name="Статус книги", choices=statuses)
     date_of_issue = models.DateTimeField(verbose_name="Дата выдачи")
-    date_of_receiving = models.DateTimeField(verbose_name="Дата получения")
+    date_of_receiving = models.DateTimeField(verbose_name="Дата получения", blank=True, null=True)
 
 
     def __str__(self):
